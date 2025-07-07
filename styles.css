@@ -29,6 +29,7 @@ li {
   margin: 5px 0;
   background: #eee;
   border-radius: 5px;
+  font-family: 'Roboto';
 }
 
 #loading {
@@ -41,4 +42,22 @@ li {
   text-align: center;
   color: red;
   margin-top: 20px;
+}
+
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-family: roboto, sans-serif;
+}
+
+th, td {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+th {
+  background: #f4f4f4;
 }
