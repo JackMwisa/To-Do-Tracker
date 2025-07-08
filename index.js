@@ -12,6 +12,17 @@ const noTasksMsg = document.getElementById('no-tasks-msg');
 const getLabel = (task) =>
   task.activity || task.title || task.text || 'No description';
 
+// Helper to render a table row
+function renderRow(task, status) {
+  return `
+    <tr>
+      <td>${task.id}</td>
+      <td>${status}</td>
+      <td>${getLabel(task)}</td>
+    </tr>
+  `;
+}
+
 async function fetchTasks() {
   try {
     const res = await fetch(API_URL);
@@ -22,40 +33,15 @@ async function fetchTasks() {
     const completed = tasks.filter((t) => t.completed);
     const pending = tasks.filter((t) => !t.completed);
 
-    //  Reduce for count
-    const count = completed.reduce((acc) => acc + 1, 0);
-    taskCount.innerText = `Completed Tasks: ${count} / ${tasks.length}`;
+    taskCount.innerText = `Completed Tasks: ${completed.length} / ${tasks.length}`;
 
-    //  Map completed to table
-    completedBody.innerHTML = completed
-      .map(
-        (task) => `
-      <tr>
-        <td>${task.id}</td>
-        <td> Completed</td>
-        <td>${getLabel(task)}</td>
-      </tr>
-    `
-      )
-      .join('');
+    completedBody.innerHTML = completed.map((task) => renderRow(task, 'Completed')).join('');
+    todoBody.innerHTML = pending.map((task) => renderRow(task, 'To Do')).join('');
 
-    //  Map pending to table
-    todoBody.innerHTML = pending
-      .map(
-        (task) => `
-      <tr>
-        <td>${task.id}</td>
-        <td>To Do</td>
-        <td>${getLabel(task)}</td>
-      </tr>
-    `
-      )
-      .join('');
-
-    // Ternary for empty pending
-    noTasksMsg.innerText = pending.length === 0 ? ' All tasks completed!' : '';
-  } catch {
+    noTasksMsg.innerText = pending.length === 0 ? 'All tasks completed!' : '';
+  } catch (err) {
     loadingDiv.innerText = 'Failed to load tasks!';
+    console.error('Error fetching tasks:', err);
   }
 }
 
